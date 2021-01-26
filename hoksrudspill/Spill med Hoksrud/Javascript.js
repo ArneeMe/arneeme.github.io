@@ -20,7 +20,9 @@ let vansklighetsgradTall = 1; //Vansklighetsgraden øker men level, men synker h
 let sjekkVinn; //Variabel som jeg bruker for å sette kollisjon som enten True eller False
 
 let lydVinn = document.getElementById("lydVinn"); //Henter lydelement fra HTML
+lydVinn.volume = 0.2;
 let lydTap = document.getElementById("lydTap");
+lydTap.volume = 0.2;
 
 let n =0; //Variabel i sammenheng med å bytte playerIcon
 let hoksrud = ["bardhoksrudRedigert1.jpg", "sjokomelkRedigert1.jpg", "moxnes2Redigert1.jpg", "Bård Hoksrud","sjokomelk","Moxnes", "ghostwhite"];
