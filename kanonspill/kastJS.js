@@ -1,3 +1,16 @@
+let areYouSure = false;
+const leaveButton = document.querySelector("#leaveGameButton")
+function leaveGame(){
+    if (!areYouSure){
+        leaveButton.innerHTML = "Trykk en gang til for å forlate"
+        areYouSure = true;
+    }
+    else{
+        location.replace("../code.html")
+    }
+
+}
+
 //Kommentarforklaringen er ofte nederst og forklarer det som er over
 const hoydeInp = document.querySelector("#hoyde");
 const vinkelInp = document.querySelector("#vinkel");

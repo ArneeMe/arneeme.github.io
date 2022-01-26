@@ -1,3 +1,15 @@
+let areYouSure = false;
+const leaveButton = document.querySelector("#leaveGameButton")
+function leaveGame(){
+    if (!areYouSure){
+        leaveButton.innerHTML = "Trykk en gang til for å forlate"
+        areYouSure = true;
+    }
+    else{
+        location.replace("../code.html")
+    }
+
+}
 let player = document.getElementById("player"); // oppretter en variabel som refererer til div-elementet
 let sjokomelk = document.getElementById("sjokomelk");
 let moxnes = document.getElementById("moxnes");
@@ -126,7 +138,7 @@ function byttPlayerIcon(){
     player.src = iconArray[n][0]; //verdiene til iconArray: de tre første (fra 0 til 2) er nye bilder
     sjokomelk.src= iconArray[n][1];
     moxnes.src=iconArray[n][2];
-    document.getElementById("info").innerHTML = "Du (" + iconArray[n][3] + ") skal prøve å komme til " + iconArray[n][4] + ". Men ikke la " + iconArray[n][5] + " ta deg! ";
+    document.getElementById("info").innerHTML = "Du (" + iconArray[n][3] + ") skal prøve å komme til " + iconArray[n][4] + ". Men ikke la " + iconArray[n][5] + " ta deg! (Piltaster for å bevege)";
     //nr 3 , 4 og 5 er navnene til bildene for å forklarer for bruker av nettsiden hva man skal gjøre.
     document.body.style.backgroundColor = iconArray[n][6]; //En fargeverdi for å endre det estetiske i tråd med temaet på bildene
 }

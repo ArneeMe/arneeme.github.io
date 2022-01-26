@@ -127,12 +127,18 @@ body{
 #fart::-webkit-slider-thumb{
     background-color: red;
 }
-/* Hentet fra w3 schools. Hadde ingen effekt på min google chrome, men kan hende at det trengs til andre internetttyper(?)
-.slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #4CAF50;
+
+#leaveGameButton{
+    background-color: #ffb300;
+    color: #212121;
+    height: 50px;
+    margin-top: 15px;
+    margin-left: 10px;
+    padding: 10px;
+    font-size: 1rem;;
+
+}
+#leaveGameButton:hover{
+    filter: brightness(1.4);
     cursor: pointer;
 }
-*/
