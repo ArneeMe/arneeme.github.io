@@ -1,12 +1,12 @@
 function bySykkel (){
-    window.location = 'bysykkelApp/index.html'
+    window.location = 'bysykkelApp/index_bysykkel.html'
 }
 function dogApp (){
-    window.location = 'theDogApp/index.html'
+    window.location = 'theDogApp/index_dogapp.html'
 }
 
 function hoksrud (){
-    window.location = 'hoksrudspill/index.html'
+    window.location = 'hoksrudspill/index_hoksrud.html'
 }
 
 function kanonspill(){
