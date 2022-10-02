@@ -1,27 +1,29 @@
 const cycleText = document.querySelector("#cycleText");
+const infoSchool = document.querySelector("#infoSchool");
 const httpStatus = new XMLHttpRequest();
 const urlStatus = 'https://gbfs.urbansharing.com/bergenbysykkel.no/station_status.json';
 const httpInfo = new XMLHttpRequest();
 const urlInfo = ' https://gbfs.urbansharing.com/bergenbysykkel.no/station_information.json'
 
-let shouldRun = true;
-let shouldRunHere = true;
 let toBeReversed = false;
 let nameId = {};
 let results = [];
-let maxNumberOfBikesAvailable = 30;
 
 httpInfo.open("GET", urlInfo);
 httpInfo.send();
 
 httpInfo.onreadystatechange = function () {
-    if((httpInfo.responseText != 0) && (shouldRun)) {
-        let stationsInfo = (JSON.parse(httpInfo.responseText)).data.stations;
-        for (let station of stationsInfo){
-            nameId[station.station_id] = station.name
+    if((httpInfo.responseText != 0)){
+        try {
+            let stationsInfo = (JSON.parse(httpInfo.responseText)).data.stations;
+            for (let station of stationsInfo) {
+                nameId[station.station_id] = station.name
+            }
+            run();
+            shouldRun = false;
+        }catch(e){
+            console.log("Stations info could not parse JSON: " + e)
         }
-        run();
-        shouldRun = false;
     }
 };
 
@@ -29,60 +31,59 @@ function run() {
     httpStatus.open("GET", urlStatus);
     httpStatus.send();
     httpStatus.onreadystatechange = function () {
-        if ((httpStatus.responseText != 0) && shouldRunHere){
-            let response = JSON.parse(httpStatus.responseText).data.stations;
-            for (let station of response) {
-                if(results.some(row => row.includes(nameId[station.station_id]))) {
-                    console.log("This is duplicate:" + nameId[station.station_id]);
-                }else {
-                    results.push([station.num_bikes_available, nameId[station.station_id]]);
+        if ((httpStatus.responseText != 0)){
+            try {
+                let response = JSON.parse(httpStatus.responseText).data.stations;
+                for (let station of response) {
+                    if (!results.some(row => row.includes(nameId[station.station_id]))) {
+                        results.push([station.num_bikes_available, nameId[station.station_id]]);
+                    }
                 }
-
-
+                sizeSort();
+                updateHtml();
+                //setInterval(update(), 1000000);
+            }catch (e){
+                console.log("Response info could not parse JSON: " + e);
             }
-            sizeSort();
-            updateHtml();
-            shouldRunHere = false;
-            setInterval(update(),10000);
         }
     }
 }
-function updateHtml() {
+function updateHtml(isBike) {
     let returnString = "";
-    console.log(results)
-
     for (let result of results){
         returnString += `<li>Det er ${result[0]} ledige sykler på ${result[1]} </li>`
     }
     cycleText.innerHTML = returnString
+    if(isBike) {
+        infoSchool.innerHTML = "Det er ledig sykkel utenfor Høytek!";
+    }
 }
 
-function sizeSort() {
-    let copyResults = results;
-    let sortedList = [];
-    for (let j = 0; j < maxNumberOfBikesAvailable; j++) {
-        for (let i = 0; i < copyResults.length; i++) {
-            if (copyResults[i][0] === j) {
-                sortedList.push(copyResults[i])
-            }
+
+function sizeSort(){
+    let isBike = false;
+    let myCopyResults = results;
+    myCopyResults = myCopyResults.sort(function(a,b){
+        if(a[1] === "Høyteknologisenteret" || a[1] === "Florida Bybanestopp"){
+            isBike = true
         }
-    }
+        return a[0] - b[0];
+    });
     if(toBeReversed){
-        sortedList.reverse();
+        myCopyResults.reverse();
         toBeReversed = false;
     }
     else{
         toBeReversed = true;
     }
-    results = sortedList;
-    shouldRunHereAgain = false;
-    updateHtml();
+    results = myCopyResults;
+    updateHtml(isBike);
 }
 
+
 function update() {
-    console.log(1);
     shouldRun = true;
     shouldRunHere = true;
     httpInfo.open("GET", urlInfo);
-  //  httpInfo.send();
+    //httpInfo.send();
 }
