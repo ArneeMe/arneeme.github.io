@@ -1,12 +1,7 @@
 const dogsTextDiv = document.querySelector("#dogsTextDivH");
 let badTemps =[];
-
 let currentDogs =[];
-//Coonhound
-//fransk vannhund
-//Dutch Shepherd
-//Spinone Italiano
-//Icelandic shepard
+
 function sleep (time) {
     return new Promise((resolve) => setTimeout(resolve, time));
 }
@@ -31,7 +26,7 @@ function removeHeightFirst(currentDogs) {
     }
     return newCurrentDogs;
 }
-function removeBadTemps(currentDogs, badTempsHere) {
+function removeBadTemps(badTempsHere) {
     let newCurrentDogs = [];
     let happy;
     for(let i = 0; i < currentDogs.length; i++) {
@@ -49,16 +44,15 @@ function removeBadTemps(currentDogs, badTempsHere) {
                 newCurrentDogs.push(dog);
             }
         } catch (e) {
-            console.log(":(", dog)
+            console.log("Error from API: ", dog)
         }
     }
     return newCurrentDogs;
 }
 
-function getDogsTemps(currentDogs) {
+function getDogsTemps() {
     let dogTemps = [];
-    for (let i = 0; i < currentDogs.length; i++) {
-        let dog = currentDogs[i];
+    for (const dog of currentDogs) {
         try {
             let dogsTemperament = dog.temperament.split(",");
             for (let j = 0; j < dogsTemperament.length; j++) {
@@ -69,29 +63,35 @@ function getDogsTemps(currentDogs) {
                 }
             }
         } catch (e) {
+            console.log("Error: " + e)
         }
     }
     return dogTemps;
 }
-function removeThis(dogs,removeDog) {
+function removeThisDog(removeDog) {
     let newDogs = [];
-    for (let i = 0; i < dogs.length;i++){
-
+    for (const dog of currentDogs){
+        if(dog.id === removeDog){
+            console.log("THIS DOG IS REMOVED:" , dog)
+        }else{
+            console.log(dog)
+            newDogs += dog;
+        }
     }
-
+    currentDogs = newDogs;
+    nextStep();
 }
-function printDogs(dogs) {
-    for (let i = 0; i < dogs.length; i++){
+function printDogs() {
+    for (let i = 0; i < currentDogs.length; i++){
         const dogDiv = document.createElement("DIV");
-        dogDiv.id = dogs[i].id;
+        dogDiv.id = currentDogs[i].id;
         dogDiv.classList.add("dogsDivClass");
         dogsTextDiv.appendChild(dogDiv);
         const dogName = document.createElement("p");
-        dogName.innerHTML = "Name: " + dogs[i].name;
+        dogName.innerHTML = "Name: " + currentDogs[i].name;
         dogDiv.appendChild(dogName);
         const dogTemps = document.createElement("p");
-        let dogTemperament = dogs[i].temperament.split(",");
-        console.log(dogTemperament);
+        let dogTemperament = currentDogs[i].temperament.split(",");
         dogTemps.innerHTML += "Tags: ";
         for(let j = 0; j < dogTemperament.length; j++){
             let dogTemp = (dogTemperament[j].replace(/ /g, ''));
@@ -99,22 +99,25 @@ function printDogs(dogs) {
         }
         dogDiv.appendChild(dogTemps);
         const dogButton = document.createElement("BUTTON");
-        dogButton.onclick = function () {removeThis(dogs, dogs[i].id)};
-        dogDiv.append
+        dogButton.innerText = "Remove me?"
+        dogButton.onclick = function () {removeThisDog(currentDogs[i].id)};
+        dogDiv.append(dogButton);
     }
 }
 function nextStep() {
     tempButtonsDiv.innerHTML = "";
     dogsTextDiv.innerHTML = "";
-    let newDogs = removeBadTemps(currentDogs, badTemps);
-    console.log(newDogs);
-    getDogsTemps(newDogs);
-    printDogs(newDogs);
+    currentDogs = removeBadTemps(badTemps);
+    getDogsTemps();
+    printDogs();
 }
 
 function createButtons(dogTemp) {
     let tempButton = document.createElement("BUTTON");
-    tempButton.addEventListener("click", function (){badTemps.push(dogTemp)});
+    tempButton.addEventListener("click", function (){
+        badTemps.push(dogTemp)
+        nextStep()
+    });
     tempButton.innerText = dogTemp;
     tempButtonsDiv.appendChild(tempButton);
 
@@ -139,8 +142,7 @@ function myFunc(allDogs) {
     console.log("Bad temps:", badTemps);
     currentDogs = removeBadTemps(currentDogs, badTemps);
     console.log("After bad temps removed:", currentDogs);
-    let dogTemps = getDogsTemps(currentDogs);
-    console.log(dogTemps)
+    nextStep()
 
 }
 
