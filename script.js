@@ -18,6 +18,9 @@ function eksamen(){
 function velgTlf(){
     window.location = 'velgTlf/velgTlfNr.html'
 }
+function farger(){
+    window.location = 'farger.html'
+}
 function emailText(){
     const collector = document.querySelector("#collector");
     const mainEmail = document.createElement("h4");
